@@ -93,7 +93,7 @@ TokenHolderController.get('/token-holders', [
     }
 })
 
-TokenHolderController.get('/token-holders/trc21', [
+TokenHolderController.get('/token-holders/rrc21', [
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt().withMessage('Require page is number'),
     check('address').optional().isLength({ min: 42, max: 42 }).withMessage('Account address is incorrect.'),
@@ -115,7 +115,7 @@ TokenHolderController.get('/token-holders/trc21', [
         }
         params.sort = { quantityNumber: -1 }
         params.query = Object.assign(params.query, { quantityNumber: { $gt: 0 } })
-        let data = await paginate(req, 'TokenTrc21Holder', params)
+        let data = await paginate(req, 'TokenRrc21Holder', params)
 
         let items = data.items
         if (items.length) {

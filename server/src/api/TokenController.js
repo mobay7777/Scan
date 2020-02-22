@@ -11,7 +11,7 @@ const { check, validationResult, query } = require('express-validator/check')
 const TokenController = Router()
 
 TokenController.get('/tokens', [
-    check('type').optional().isString().withMessage('Default is trc-20'),
+    check('type').optional().isString().withMessage('Default is rrc-20'),
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt().withMessage('Require page is number')
 ], async (req, res) => {
@@ -233,7 +233,7 @@ TokenController.post('/tokens/:token/updateInfo', [
 })
 
 TokenController.get('/tokens/holding/:tokenType/:holder', [
-    check('tokenType').exists().isString().withMessage('trc20/trc21/trc721'),
+    check('tokenType').exists().isString().withMessage('rrc20/rrc21/rrc721'),
     check('holder').exists().isLength({ min: 42, max: 42 }).withMessage('Address holding token'),
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt().withMessage('Require page is number')
@@ -247,11 +247,11 @@ TokenController.get('/tokens/holding/:tokenType/:holder', [
 
     try {
         let data
-        if (tokenType === 'trc20') {
+        if (tokenType === 'rrc20') {
             data = await utils.paginate(req, 'TokenHolder', { query: { hash: holder } })
-        } else if (tokenType === 'trc21') {
-            data = await utils.paginate(req, 'TokenTrc21Holder', { query: { hash: holder } })
-        } else if (tokenType === 'trc721') {
+        } else if (tokenType === 'rrc21') {
+            data = await utils.paginate(req, 'TokenRrc21Holder', { query: { hash: holder } })
+        } else if (tokenType === 'rrc721') {
             data = await utils.paginate(req, 'TokenNftHolder', { query: { holder: holder } })
         } else {
             data = { total: 0, perPage: 20, currentPage: 1, pages: 0, items: [] }
@@ -281,7 +281,7 @@ TokenController.get('/tokens/holding/:tokenType/:holder', [
                                 .trim()
                             items[i]['tokenObj'] = tokens[j]
 
-                            if (tokenType === 'trc20' || tokenType === 'trc21') {
+                            if (tokenType === 'rrc20' || tokenType === 'rrc21') {
                                 let tk = await TokenHelper.getTokenBalance(
                                     { hash: tokens[j].hash, decimals: tokens[j].decimals }, items[i].hash)
                                 items[i].quantity = tk.quantity

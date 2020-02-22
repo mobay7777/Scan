@@ -37,7 +37,7 @@ SettingController.get('/setting/usd', async (req, res) => {
             logger.info('load tomo price from cache')
             return res.json(r)
         }
-        let url = 'https://api.coingecko.com/api/v3/simple/price?ids=tomochain&vs_currencies=usd'
+        let url = 'https://api.coingecko.com/api/v3/simple/price?ids=rupaya&vs_currencies=usd'
 
         let { data } = await axios.get(url, { timeout: 5000 })
 

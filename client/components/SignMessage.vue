@@ -137,7 +137,7 @@ export default {
         self.message = data.message
         self.messId = data.id
 
-        self.qrCode = encodeURI('tomochain:sign?message=' + data.message + '&' +
+        self.qrCode = encodeURI('rupaya:sign?message=' + data.message + '&' +
             'submitURL=' + data.url + data.id)
 
         if (self.processingMess) {

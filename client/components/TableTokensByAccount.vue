@@ -24,19 +24,19 @@
                 slot="hash"
                 slot-scope="props">
                 <nuxt-link
-                    v-if="token_type === 'trc20'"
+                    v-if="token_type === 'rrc20'"
                     :class="props.item.tokenObj ? '' : 'text-truncate'"
-                    :to="{name: 'tokens-slug-trc20-holder', params: {slug: props.item.token, holder: holder}}">
+                    :to="{name: 'tokens-slug-rrc20-holder', params: {slug: props.item.token, holder: holder}}">
                     {{ props.item.tokenObj ? props.item.tokenObj.name : props.item.token }}</nuxt-link>
                 <nuxt-link
-                    v-if="token_type === 'trc21'"
+                    v-if="token_type === 'rrc21'"
                     :class="props.item.tokenObj ? '' : 'text-truncate'"
-                    :to="{name: 'tokens-slug-trc21-holder', params: {slug: props.item.token, holder: holder}}">
+                    :to="{name: 'tokens-slug-rrc21-holder', params: {slug: props.item.token, holder: holder}}">
                     {{ props.item.tokenObj ? props.item.tokenObj.name : props.item.token }}</nuxt-link>
                 <nuxt-link
-                    v-if="token_type === 'trc721'"
+                    v-if="token_type === 'rrc721'"
                     :class="props.item.tokenObj ? '' : 'text-truncate'"
-                    :to="{name: 'tokens-slug-trc721-holder', params: {slug: props.item.token, holder: holder}}">
+                    :to="{name: 'tokens-slug-rrc721-holder', params: {slug: props.item.token, holder: holder}}">
                     {{ props.item.tokenObj ? props.item.tokenObj.name : props.item.token }}</nuxt-link>
             </template>
 
@@ -44,11 +44,11 @@
                 slot="quantity"
                 slot-scope="props">
                 <span
-                    v-if="token_type === 'trc20' || token_type === 'trc21'">
+                    v-if="token_type === 'rrc20' || token_type === 'rrc21'">
                     {{ formatUnit(toTokenQuantity(props.item.quantity, props.item.tokenObj.decimals),
                                   props.item.tokenObj.symbol) }}</span>
                 <span
-                    v-if="token_type === 'trc721'">
+                    v-if="token_type === 'rrc721'">
                     {{ props.item.tokenId }}</span>
             </template>
 
@@ -99,7 +99,7 @@ export default {
     data: () => ({
         fields: {
             hash: { label: 'Token' },
-            quantity: { label: self.token_type === 'trc721' ? 'Token ID' : 'Quantity' }
+            quantity: { label: self.token_type === 'rrc721' ? 'Token ID' : 'Quantity' }
         },
         loading: true,
         total: 0,

@@ -8,7 +8,7 @@
                 <b-navbar-brand :to="{name: 'index'}">
                     <img
                         src="~/assets/img/logo.svg"
-                        alt="TomoScan"
+                        alt="Scan"
                         class="tomo-nav__logo">
                 </b-navbar-brand>
                 <b-navbar-toggle
@@ -54,12 +54,12 @@
                         <b-nav-item-dropdown
                             :class="(isTokens || isTokenTxs) ? 'active' : ''"
                             text="Tokens">
-                            <b-dropdown-item :to="{name: 'tokens-trc20'}">TRC20 Tokens</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokentxs'}">TRC20 Transfers</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokens-trc21'}">TRC21 Tokens</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokentxs-trc21'}">TRC21 Transfers</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokens-nft'}">TRC721 Tokens</b-dropdown-item>
-                            <b-dropdown-item :to="{name: 'tokentxs-nft'}">TRC721 Transfers</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokens-rrc20'}">RRC20 Tokens</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokentxs'}">RRC20 Transfers</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokens-rrc21'}">RRC21 Tokens</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokentxs-rrc21'}">RRC21 Transfers</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokens-nft'}">RRC721 Tokens</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'tokentxs-nft'}">RRC721 Transfers</b-dropdown-item>
                         </b-nav-item-dropdown>
                         <b-nav-item-dropdown
                             text="Blocks">
@@ -194,12 +194,12 @@
                     <b-col
                         md="6"
                         class="tomo-footer__copyright">
-                        <p>TomoScan {{ (new Date()).getFullYear() }} - <a
-                            :href="`https://github.com/tomochain/tomoscan/releases/tag/v${version}`">
+                        <p>Scan {{ (new Date()).getFullYear() }} - <a
+                            :href="`https://github.com/rupayaproject/scan/releases/tag/v${version}`">
                             v{{ version }}</a>
 
                             <code class="text-muted copyright__code">
-                                TomoChain/stable/linux-amd64/golang
+                                scan/stable/linux-amd64/golang
                             </code>
                         </p>
                     </b-col>
@@ -209,35 +209,35 @@
                         <ul class="list-inline tomo-footer__social">
                             <li class="list-inline-item">
                                 <a
-                                    href="https://t.me/tomochain"
+                                    href="https://t.me/rupaya"
                                     target="_blank">
                                     <i class="fa fa-telegram"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://www.facebook.com/tomochainofficial"
+                                    href="https://www.facebook.com/rupayacoin"
                                     target="_blank">
                                     <i class="fa fa-facebook"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://twitter.com/TomoChainANN"
+                                    href="https://twitter.com/rupayacoin"
                                     target="_blank">
                                     <i class="fa fa-twitter"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://github.com/tomochain/"
+                                    href="https://github.com/rupayaproject/"
                                     target="_blank">
                                     <i class="fa fa-github"/>
                                 </a>
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://www.reddit.com/r/Tomochain/"
+                                    href="https://www.reddit.com/r/rupayacoin/"
                                     target="_blank">
                                     <i class="fa fa-reddit"/>
                                 </a>

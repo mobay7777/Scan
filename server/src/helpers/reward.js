@@ -1,5 +1,5 @@
 const axios = require('axios')
-const { tomoValidator, blockSigner } = require('./tomo')
+const { rupxValidator, blockSigner } = require('rupaya')
 const config = require('config')
 const db = require('../models')
 const logger = require('./logger')
@@ -37,7 +37,7 @@ let RewardHelper = {
             await db.VoteHistory.insertMany(candidates)
         }
 
-        const contract = await tomoValidator.getValidatorContractWs()
+        const contract = await rupxValidator.getValidatorContractWs()
         await contract.getPastEvents('allEvents', { fromBlock: startBlock, toBlock: endBlock })
             .then(async (events) => {
                 let map = events.map(async function (event) {
@@ -212,7 +212,7 @@ let RewardHelper = {
                 timestamp
             )
 
-            let ownerValidator = await tomoValidator.getCandidateOwner(validator.address)
+            let ownerValidator = await rupxValidator.getCandidateOwner(validator.address)
             ownerValidator = ownerValidator.toString().toLowerCase()
 
             let userVoteAmount = await db.UserVoteAmount.findOne({
@@ -240,7 +240,7 @@ let RewardHelper = {
                 epoch: epoch,
                 startBlock: startBlock,
                 endBlock: endBlock,
-                address: contractAddress.TomoFoundation,
+                address: contractAddress.RupxFoundation,
                 validator: validator.address,
                 reason: 'Foundation',
                 lockBalance: 0,
@@ -422,7 +422,7 @@ let RewardHelper = {
                             address: v.toLowerCase(),
                             validator: m.toLowerCase(),
                             validatorName: canName[m.toLowerCase()] ? canName[m.toLowerCase()] : 'Anonymous',
-                            reason: v.toLowerCase() === contractAddress.TomoFoundation ? 'Foundation' : 'Voter',
+                            reason: v.toLowerCase() === contractAddress.RupxFoundation ? 'Foundation' : 'Voter',
                             lockBalance: 0,
                             reward: r,
                             rewardTime: block.timestamp * 1000,

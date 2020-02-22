@@ -1,11 +1,11 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: TomoScan APIs
-  description: TomoScan APIs
+  title: Scan APIs
+  description: Scan APIs
   license:
     name: Github
-    url: 'https://github.com/tomochain/tomoscan'
+    url: 'https://github.com/rupayaproject/scan'
 tags:
   - name: Accounts
     description: Accounts API

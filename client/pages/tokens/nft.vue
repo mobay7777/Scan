@@ -102,7 +102,7 @@ export default {
             let params = {
                 page: self.currentPage,
                 limit: self.perPage,
-                type: 'trc721'
+                type: 'rrc721'
             }
 
             let query = this.serializeQuery(params)

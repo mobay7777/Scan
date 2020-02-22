@@ -8,7 +8,7 @@
                 <h2 class="tomo-card__headline">
                     <img
                         v-if="isVerified"
-                        :src="'https://raw.githubusercontent.com/tomochain/tokens/master/tokens/' + hash + '.png'"
+                        :src="'https://raw.githubusercontent.com/rupayaproject/tokens/master/tokens/' + hash + '.png'"
                         width="35px">
                     {{ tokenName }}&nbsp;</h2>
                 <i
@@ -55,7 +55,7 @@
                                         v-else>
                                         Not Available,
                                         <a
-                                            href="https://github.com/tomochain/tokens"
+                                            href="https://github.com/rupayaproject/tokens"
                                             target="_blank"
                                             class="text-truncate">Update</a> ?
                                     </td>
@@ -76,7 +76,7 @@
                                             class="text-truncate">{{ token.hash }}</nuxt-link>
                                     </td>
                                 </tr>
-                                <tr v-if="token.type === 'trc20'">
+                                <tr v-if="token.type === 'rrc20'">
                                     <td>Decimal</td>
                                     <td>{{ token.decimals }}</td>
                                 </tr>
@@ -99,7 +99,7 @@
                                         <span v-else>
                                             Not Available,
                                             <a
-                                                href="https://github.com/tomochain/tokens"
+                                                href="https://github.com/rupayaproject/tokens"
                                                 target="_blank"
                                                 class="text-truncate">Update</a> ?
                                         </span>
@@ -145,17 +145,17 @@
                         title="Token Transfers"
                         href="#tokenTransfers">
                         <table-token-tx
-                            v-if="token.type === 'trc20'"
+                            v-if="token.type === 'rrc20'"
                             :token="hash"
                             :parent="'#tokenTransfers'"
                             :page="this"/>
                         <table-token-tx-nft
-                            v-if="token.type === 'trc721'"
+                            v-if="token.type === 'rrc721'"
                             :token="hash"
                             :parent="'#tokenTransfers'"
                             :page="this"/>
-                        <table-token-tx-trc21
-                            v-if="token.type === 'trc21'"
+                        <table-token-tx-rrc21
+                            v-if="token.type === 'rrc21'"
                             :token="hash"
                             :parent="'#tokenTransfers'"
                             :page="this"/>
@@ -165,17 +165,17 @@
                         title="Token Holders"
                         href="#tokenHolders">
                         <table-token-holder
-                            v-if="token.type === 'trc20'"
+                            v-if="token.type === 'rrc20'"
                             :address="hash"
                             :parent="'#tokenHolders'"
                             :page="this"/>
                         <table-token-nft-holder
-                            v-if="token.type === 'trc721'"
+                            v-if="token.type === 'rrc721'"
                             :address="hash"
                             :parent="'#tokenHolders'"
                             :page="this"/>
-                        <table-token-trc21-holder
-                            v-if="token.type === 'trc21'"
+                        <table-token-rrc21-holder
+                            v-if="token.type === 'rrc21'"
                             :address="hash"
                             :parent="'#tokenHolders'"
                             :page="this"/>
@@ -207,10 +207,10 @@
 import mixin from '~/plugins/mixin'
 import TableTokenTx from '~/components/TableTokenTx'
 import TableTokenTxNft from '~/components/TableTokenTxNft'
-import TableTokenTxTrc21 from '~/components/TableTokenTxTrc21'
+import TableTokenTxRrc21 from '~/components/TableTokenTxRrc21'
 import TableTokenHolder from '~/components/TableTokenHolder'
 import TableTokenNftHolder from '~/components/TableTokenNftHolder'
-import TableTokenTrc21Holder from '~/components/TableTokenTrc21Holder'
+import TableTokenRrc21Holder from '~/components/TableTokenRrc21Holder'
 import ReadContract from '~/components/ReadContract'
 import ReadSourceCode from '~/components/ReadSourceCode'
 
@@ -219,11 +219,11 @@ export default {
         ReadSourceCode,
         TableTokenTx,
         TableTokenTxNft,
-        TableTokenTxTrc21,
+        TableTokenTxRrc21,
         ReadContract,
         TableTokenHolder,
         TableTokenNftHolder,
-        TableTokenTrc21Holder
+        TableTokenRrc21Holder
     },
     mixins: [mixin],
     head () {

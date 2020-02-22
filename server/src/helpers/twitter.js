@@ -16,11 +16,11 @@ let TwitterHelper = {
         try {
             amount = new BigNumber(amount)
             amount = amount.dividedBy(10 ** 18).toNumber()
-            let msg = `${utils.formatNumber(amount)} $TOMO transferred from ${utils.hiddenString(from, 5)} ` +
+            let msg = `${utils.formatNumber(amount)} $RUPX transferred from ${utils.hiddenString(from, 5)} ` +
               `${accountName[from] ? '(' + accountName[from] + ')' : ''} to ${utils.hiddenString(to, 5)} ` +
               `${accountName[to] ? '(' + accountName[to] + ')' : ''} 
             
-              tx: scan.tomochain.com/txs/${txHash}`
+              tx: scan.rupaya.io/txs/${txHash}`
 
             await twitter.post('statuses/update', { status: msg })
         } catch (e) {

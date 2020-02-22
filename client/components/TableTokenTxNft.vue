@@ -62,7 +62,7 @@
                     class="text-truncate">{{ props.item.from }}</span>
                 <nuxt-link
                     v-else
-                    :to="{name: 'tokens-slug-trc721-holder',
+                    :to="{name: 'tokens-slug-rrc721-holder',
                           params: {slug: props.item.address, holder: props.item.from}}"
                     class="text-truncate">{{ props.item.from }}</nuxt-link>
             </template>
@@ -87,7 +87,7 @@
                         class="text-truncate">{{ props.item.to }}</span>
                     <nuxt-link
                         v-else
-                        :to="{name: 'tokens-slug-trc721-holder',
+                        :to="{name: 'tokens-slug-rrc721-holder',
                               params: {slug: props.item.address, holder: props.item.to}}"
                         class="text-truncate">{{ props.item.to }}</nuxt-link>
                 </div>
@@ -181,7 +181,7 @@ export default {
             }
 
             let query = this.serializeQuery(params)
-            let { data } = await this.$axios.get('/api/token-txs/trc721' + '?' + query)
+            let { data } = await this.$axios.get('/api/token-txs/rrc721' + '?' + query)
             self.items = data.items
             self.total = data.total
             self.pages = data.pages

@@ -115,17 +115,17 @@ br.register('tokens-slug', (brs, location) => {
     brs.parent('tokens')
     brs.push('Token Detail', location)
 })
-br.register('tokens-trc20', (brs, location) => {
+br.register('tokens-rrc20', (brs, location) => {
     brs.parent('tokens')
-    brs.push('TRC20 Token', location)
+    brs.push('RRC20 Token', location)
 })
-br.register('tokens-trc21', (brs, location) => {
+br.register('tokens-rrc21', (brs, location) => {
     brs.parent('tokens')
-    brs.push('TRC21 Token', location)
+    brs.push('RRC21 Token', location)
 })
 br.register('tokens-nft', (brs, location) => {
     brs.parent('tokens')
-    brs.push('TRC721 Token', location)
+    brs.push('RRC721 Token', location)
 })
 br.register('tokens-slug-info', (brs, location) => {
     brs.parent('tokens')
@@ -133,15 +133,15 @@ br.register('tokens-slug-info', (brs, location) => {
 })
 br.register('tokentxs', (brs) => {
     brs.parent('index')
-    brs.push('Token (TRC20) Transfers', { name: 'tokentxs' })
+    brs.push('Token (RRC20) Transfers', { name: 'tokentxs' })
 })
 br.register('tokentxs-nft', (brs) => {
     brs.parent('index')
-    brs.push('Token (TRC721) Transfers', { name: 'tokentxs-nft' })
+    brs.push('Token (RRC721) Transfers', { name: 'tokentxs-nft' })
 })
-br.register('tokentxs-trc21', (brs) => {
+br.register('tokentxs-rrc21', (brs) => {
     brs.parent('index')
-    brs.push('Token (TRC21) Transfers', { name: 'tokentxs-trc21' })
+    brs.push('Token (RRC21) Transfers', { name: 'tokentxs-rrc21' })
 })
 br.register('follows', (brs) => {
     brs.parent('index')

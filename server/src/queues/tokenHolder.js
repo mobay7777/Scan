@@ -9,14 +9,14 @@ consumer.processNumber = 2
 consumer.task = async function (job, done) {
     try {
         let token = JSON.parse(job.data.token)
-        logger.info(`Transfer ${token.value} token ${token.address} from ${token.from} to ${token.to}`)
+        logger.info('Process token holder: %s %s %s', token.from, token.to, token.value)
         if (!token) {
             return done()
         }
         // Add holder from.
-        await TokenHolderHelper.updateQuality(token.from, token.address)
+        await TokenHolderHelper.updateQuality(token.from, token.address, -token.value)
         // Add holder to.
-        await TokenHolderHelper.updateQuality(token.to, token.address)
+        await TokenHolderHelper.updateQuality(token.to, token.address, token.value)
     } catch (e) {
         logger.warn('Error TokenHolderProcess %s', e)
         return done(e)

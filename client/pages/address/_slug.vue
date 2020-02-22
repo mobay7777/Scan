@@ -33,18 +33,18 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>TOMO Balance</td>
+                            <td>RUPX Balance</td>
                             <td>
                                 <span>{{ formatUnit(toTomo(address.balance, 18)) }}</span>
                             </td>
                         </tr>
                         <tr>
-                            <td>TOMO USD Value</td>
+                            <td>RUPX USD Value</td>
                             <td>
                                 <span>{{ formatNumber(usdPrice * toTomoNumber(address.balance)) }} (price from
                                     <a
                                         target="_blank"
-                                        href="https://www.coingecko.com/en/coins/tomochain">CoinGecko</a>)</span>
+                                        href="https://www.coingecko.com/en/coins/rupaya">CoinGecko</a>)</span>
                             </td>
                         </tr>
                         <tr>
@@ -178,36 +178,36 @@
             </b-tab>
             <!--:title="'Token Holding (' + formatNumber(tokensCount) + ')'"-->
             <b-tab
-                v-if="address && address.hasTrc20"
-                id="trc20Holding"
-                title="TRC20 Holding"
-                href="#trc20Holding">
+                v-if="address && address.hasRrc20"
+                id="rrc20Holding"
+                title="RRC20 Holding"
+                href="#rrc20Holding">
                 <table-tokens-by-account
                     :holder="hash"
-                    :token_type="'trc20'"
-                    :parent="'trc20Holding'"
+                    :token_type="'rrc20'"
+                    :parent="'rrc20Holding'"
                     :page="this"/>
             </b-tab>
             <b-tab
-                v-if="address && address.hasTrc21"
-                id="trc21Holding"
-                title="TRC21 Holding"
-                href="#trc21Holding">
+                v-if="address && address.hasRrc21"
+                id="rrc21Holding"
+                title="RRC21 Holding"
+                href="#rrc21Holding">
                 <table-tokens-by-account
                     :holder="hash"
-                    :token_type="'trc21'"
-                    :parent="'trc21Holding'"
+                    :token_type="'rrc21'"
+                    :parent="'rrc21Holding'"
                     :page="this"/>
             </b-tab>
             <b-tab
-                v-if="address && address.hasTrc721"
-                id="trc721Inventory"
-                title="TRC721 Inventory"
-                href="#trc721Inventory">
+                v-if="address && address.hasRrc721"
+                id="rrc721Inventory"
+                title="RRC721 Inventory"
+                href="#rrc721Inventory">
                 <table-tokens-by-account
                     :holder="hash"
-                    :token_type="'trc721'"
-                    :parent="'trc721Inventory'"
+                    :token_type="'rrc721'"
+                    :parent="'rrc721Inventory'"
                     :page="this"/>
             </b-tab>
             <b-tab

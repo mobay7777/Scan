@@ -96,7 +96,7 @@ AccountController.get('/accounts/:slug/listTokens', [
             const tokenDetail = await db.Token.findOne({
                 hash: t.hash
             })
-            const holders = await db.TokenTrc21Holder.count({
+            const holders = await db.TokenRrc21Holder.count({
                 token: t.hash,
                 hash: { $ne: '0x0000000000000000000000000000000000000000' }
             })

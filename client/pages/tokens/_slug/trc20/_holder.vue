@@ -172,7 +172,7 @@ export default {
     mixins: [mixin],
     head () {
         return {
-            title: 'Token TRC20 Holder Info'
+            title: 'Token RRC20 Holder Info'
         }
     },
     data () {

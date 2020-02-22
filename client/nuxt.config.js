@@ -5,7 +5,7 @@ module.exports = {
   ** Headers of the page
   */
     head: {
-        title: 'TomoScan',
+        title: 'Scan',
         meta: [
             { charset: 'utf-8' },
             {
@@ -20,7 +20,7 @@ module.exports = {
             },
             {
                 property: 'og:url',
-                content: 'https://scan.tomochain.com'
+                content: 'https://scan.rupaya.io'
             },
             {
                 property: 'og:type',
@@ -28,7 +28,7 @@ module.exports = {
             },
             {
                 property: 'og:title',
-                content: 'TomoScan - TomoChain block explorer'
+                content: 'Scan - Rupaya block explorer'
             },
             {
                 property: 'og:description',
@@ -37,7 +37,7 @@ module.exports = {
             },
             {
                 property: 'og:image',
-                content: 'https://scan.tomochain.com/logoshare.png'
+                content: 'https://scan.rupaya.io/logoshare.png'
             },
             {
                 property: 'og:image:height',

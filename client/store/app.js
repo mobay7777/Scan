@@ -13,7 +13,7 @@ export const actions = {
         try {
             let { data } = await this.$axios.get('/api/setting/usd')
 
-            commit('setUSDPrice', data.tomochain.usd)
+            commit('setUSDPrice', data.rupaya.usd)
 
             return Promise.resolve()
         } catch (e) {

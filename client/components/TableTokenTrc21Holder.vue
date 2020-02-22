@@ -24,7 +24,7 @@
                 slot="hash"
                 slot-scope="props">
                 <nuxt-link
-                    :to="{name: 'tokens-slug-trc21-holder', params: { slug: address, holder: props.item.hash}}"
+                    :to="{name: 'tokens-slug-rrc21-holder', params: { slug: address, holder: props.item.hash}}"
                     class="text-truncate">{{ props.item.hash }}</nuxt-link>
             </template>
 
@@ -107,7 +107,7 @@ export default {
             }
 
             let query = this.serializeQuery(params)
-            let { data } = await this.$axios.get('/api/token-holders/trc21' + '?' + query)
+            let { data } = await this.$axios.get('/api/token-holders/rrc21' + '?' + query)
             self.items = data.items
             self.total = data.total
             self.pages = data.pages
