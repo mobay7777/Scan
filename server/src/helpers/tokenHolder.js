@@ -40,7 +40,7 @@ let TokenHolderHelper = {
                 }
                 tokenType = await TokenHelper.checkTokenType(code)
             }
-            if (tokenType === 'trc20') {
+            if (tokenType === 'rrc20') {
                 let holder = await db.TokenHolder.findOne({ hash: hash, token: token })
                 if (!holder) {
                     // Create new.
@@ -54,11 +54,11 @@ let TokenHolderHelper = {
                 holder.quantity = balance.quantity
                 holder.quantityNumber = balance.quantityNumber
                 await holder.save()
-            } else if (tokenType === 'trc21') {
-                let holder = await db.TokenTrc21Holder.findOne({ hash: hash, token: token })
+            } else if (tokenType === 'rrc21') {
+                let holder = await db.TokenRrc21Holder.findOne({ hash: hash, token: token })
                 if (!holder) {
                     // Create new.
-                    holder = await db.TokenTrc21Holder.create({
+                    holder = await db.TokenRrc21Holder.create({
                         hash: hash,
                         token: token,
                         quantity: 0

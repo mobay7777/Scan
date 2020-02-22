@@ -47,20 +47,20 @@ consumer.task = async function (job, done) {
             decimals = await web3.utils.hexToNumberString(decimals)
             tokenType = await TokenHelper.checkTokenType(code)
         }
-        if (tokenType === 'trc20' || tokenType === 'trc21') {
+        if (tokenType === 'rrc20' || tokenType === 'rrc21') {
             _log.value = web3.utils.hexToNumberString(log.data)
 
             let vl = new BigNumber(_log.value || 0)
             _log.valueNumber = vl.dividedBy(10 ** parseInt(decimals)).toNumber() || 0
 
             delete _log['_id']
-            if (tokenType === 'trc20') {
+            if (tokenType === 'rrc20') {
                 await db.TokenTx.updateOne(
                     { transactionHash: transactionHash, from: _log.from, to: _log.to },
                     _log,
                     { upsert: true, new: true })
             } else {
-                await db.TokenTrc21Tx.updateOne(
+                await db.TokenRrc21Tx.updateOne(
                     { transactionHash: transactionHash, from: _log.from, to: _log.to },
                     _log,
                     { upsert: true, new: true })
@@ -88,7 +88,7 @@ consumer.task = async function (job, done) {
             })
                 .priority('normal').removeOnComplete(true)
                 .attempts(5).backoff({ delay: 2000, type: 'fixed' }).save()
-        } else if (tokenType === 'trc721') {
+        } else if (tokenType === 'rrc721') {
             if (log.topics[3]) {
                 _log.tokenId = await web3.utils.hexToNumber(log.topics[3])
                 await db.TokenNftTx.updateOne(

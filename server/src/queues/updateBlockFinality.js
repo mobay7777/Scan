@@ -45,7 +45,7 @@ consumer.task = async function (job, done) {
                 await db.ContractEvent.deleteMany({ blockHash: block.hash })
                 await db.Log.deleteMany({ blockHash: block.hash })
                 await db.TokenNftTx.deleteMany({ blockHash: block.hash })
-                await db.TokenTrc21Tx.deleteMany({ blockHash: block.hash })
+                await db.TokenRrc21Tx.deleteMany({ blockHash: block.hash })
                 await db.TokenTx.deleteMany({ blockHash: block.hash })
 
                 q.create('BlockProcess', { block: block.number })

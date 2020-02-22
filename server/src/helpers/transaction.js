@@ -67,7 +67,7 @@ let TransactionHelper = {
                     {
                         transactionHash: log.transactionHash,
                         infoName: 'Swap rate',
-                        infoValue: `1 TOMO = ${tomoRate} CONST`
+                        infoValue: `1 RUPX = ${tomoRate} CONST`
                     }
                 ]
                 await db.TxExtraInfo.insertMany(txExtraInfo)
@@ -222,7 +222,7 @@ let TransactionHelper = {
             if (logs.length) {
                 let logCount = []
                 await db.TokenTx.deleteMany({ transactionHash: tx.hash })
-                await db.TokenTrc21Tx.deleteMany({ transactionHash: tx.hash })
+                await db.TokenRrc21Tx.deleteMany({ transactionHash: tx.hash })
                 await db.TokenNftTx.deleteMany({ transactionHash: tx.hash })
                 for (let i = 0; i < logs.length; i++) {
                     let log = logs[i]
