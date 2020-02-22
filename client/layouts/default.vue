@@ -69,7 +69,7 @@
                     </b-navbar-nav>
                     <b-navbar-nav class="tomo-nav__login">
                         <b-nav-item
-                            :href="'https://docs.tomochain.com/tomoscan/features/'"
+                            :href="'https://docs.rupaya.io/scan/features/'"
                             :target="'_blank'">Need help?</b-nav-item>
                             <!-- <b-nav-item
                             v-b-modal="'loginModal'"

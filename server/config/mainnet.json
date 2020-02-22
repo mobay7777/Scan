@@ -1,6 +1,6 @@
 {
   "APP_ENV": "prod",
-  "MONGODB_URI": "mongodb://mongo:27017/tomoscan",
+  "MONGODB_URI": "mongodb://mongo:27017/scan",
   "logs": {
     "level": "info"
   },
