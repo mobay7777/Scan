@@ -522,7 +522,7 @@ TxController.get(['/txs/:slug', '/tx/:slug'], [
                         break
                     }
                 }
-                if (isRegisterOnTomoIssuer) {
+                if (isRegisterOnRupxIssuer) {
                     rrc21FeeFund = await contract.methods.getTokenCapacity(tx.to).call()
                 } else {
                     rrc21FeeFund = -1
