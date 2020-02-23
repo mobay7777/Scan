@@ -1,5 +1,5 @@
 const axios = require('axios')
-const { rupxValidator, blockSigner } = require('rupaya')
+const { rupxValidator, blockSigner } = require('./rupaya')
 const config = require('config')
 const db = require('../models')
 const logger = require('./logger')
