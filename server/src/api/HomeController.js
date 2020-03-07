@@ -14,7 +14,7 @@ HomeController.get('/circulatingSupply', async (req, res) => {
     let lastBlock = await web3.eth.getBlockNumber()
     let totalEpoch = Math.ceil(lastBlock / config.get('BLOCK_PER_EPOCH'))
     let totalReward = new BigNumber((totalEpoch - 1) * config.get('REWARD'))
-    let circulatingSupply = new BigNumber(83 * 10 ** 6)
+    let circulatingSupply = new BigNumber(72 * 10 ** 6)
     circulatingSupply = circulatingSupply.multipliedBy(10 ** 18)
         .plus(totalReward.multipliedBy(10 ** 18)).minus(foundationBalance).minus(teamBalance)
 
