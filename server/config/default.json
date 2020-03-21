@@ -1,8 +1,8 @@
 {
   "APP_ENV": "prod",
-  "MONGODB_URI": "mongodb://localhost:27017/scan",
+  "MONGODB_URI": "mongodb://mongodb:27017/scan",
   "redis": {
-    "host": "localhost",
+    "host": "redis",
     "port": 6379,
     "password": null,
     "prefix": "Scan"
