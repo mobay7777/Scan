@@ -46,7 +46,7 @@
   "SENDER_EMAIL": "support@rupx.com",
 
   "BASE_URL": "https://scan.rupaya.io/",
-  "CLIENT_URL": "http://127.0.0.1:3000/",
+  "CLIENT_URL": "http://scanclient:3000/",
   "TOMOMASTER_API_URL": "https://gov.rupaya.io",
 
   "BLOCK_PER_EPOCH": 900,
