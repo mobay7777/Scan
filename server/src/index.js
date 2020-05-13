@@ -46,20 +46,21 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(docs))
 app.use(authService.initialize())
 authService.setJwtStrategy()
 
-mongoose.connect(config.get('MONGODB_URI'), { useCreateIndex: true, useNewUrlParser: true }, (err) => {
-    if (err) {
-        console.log(
-            'MongoDB Connection Error. Please make sure that MongoDB is running.')
-        process.exit(1)
-    } else {
-    // Initialize public api
-        app.use('/api', api)
-    }
-})
+mongoose.connect(config.get('MONGODB_URI'),
+    { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+        if (err) {
+            console.log(
+                'MongoDB Connection Error. Please make sure that MongoDB is running.')
+            process.exit(1)
+        } else {
+        // Initialize public api
+            app.use('/api', api)
+        }
+    })
 
 if (config.get('DEBUG_QUERY') === true) {
     mongoose.set('debug', function (coll, method, query, doc, options) {
-        let set = {
+        const set = {
             coll: coll,
             method: method,
             query: query,

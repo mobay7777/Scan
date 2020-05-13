@@ -26,6 +26,18 @@
   color: $black !important;
 }
 
+.text-primary {
+  color: $color-primary !important;
+}
+
+.text-warning {
+  color: $color-warning !important;
+}
+
+.text-info {
+  color: $color-info !important;
+}
+
 .contract-creation:before {
   content: '';
   display: inline-block;
@@ -139,11 +151,41 @@
 }
 
 .fa-coinmarketcap:before {
-  content: url('~/assets/img/coinmarketcap.png');
+  content: url('~assets/img/coinmarketcap.png');
 }
 .fa-coingecko:before {
-  content: url('~/assets/img/coingecko.png');
+  content: url('~assets/img/coingecko.png');
 }
 .fa-email:before {
   content: "\f003";
+}
+.filter-col{
+  padding-left:10px;
+  padding-right:10px;
+}
+.mb-30 {
+  margin-bottom: 30px;
+}
+.filter-box {
+  border-radius: 10px;
+  background-color: #fff;
+  -webkit-box-shadow: 8px 8px 40px 0 rgba(0, 0, 0, .07);
+  box-shadow: 8px 8px 40px 0 rgba(0, 0, 0, .07);
+  padding: 15px 10px;
+  margin-bottom: 20px;
+  -webkit-transition: all .3s ease-in;
+  transition: all .3s ease-in;
+}
+@include media-breakpoint-down(md) {
+  .filter-box {
+    display: none;
+  }
+}
+.ml-15 {
+  margin-left: -15px;
+}
+
+
+body.dark-mode .filter-box {
+  background-image: linear-gradient(-135deg, #2e2e4b, #323252);
 }

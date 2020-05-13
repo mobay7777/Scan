@@ -11,15 +11,15 @@
                     <span v-if="address && address.isContract">Contract: </span>
                     <read-more
                         :text="address.hash"
-                        class="d-sm-none" />
+                        class="d-sm-none"/>
                     <read-more
                         :text="address.hash"
                         :max-chars="20"
-                        class="d-none d-sm-inline-block d-lg-none" />
+                        class="d-none d-sm-inline-block d-lg-none"/>
                     <read-more
                         :text="address.hash"
                         :max-chars="30"
-                        class="d-none d-lg-inline-block d-xl-none" />
+                        class="d-none d-lg-inline-block d-xl-none"/>
                     <span class="d-none d-xl-inline-block">{{ address.hash }}</span>
                 </h3>
             </div>
@@ -50,7 +50,7 @@
                         <tr>
                             <td>Transactions</td>
                             <td>
-                                <span>{{ formatNumber(totalTxsCount) }}</span> txns
+                                <span>{{ formatNumber(totalInTx + totalOutTx) }}</span> txns
                             </td>
                         </tr>
                         <tr v-if="address && !address.isContract">
@@ -58,15 +58,15 @@
                             <td>
                                 <read-more
                                     :text="address.code"
-                                    class="d-sm-none" />
+                                    class="d-sm-none"/>
                                 <read-more
                                     :text="address.code"
                                     :max-chars="20"
-                                    class="d-none d-sm-inline-block d-lg-none" />
+                                    class="d-none d-sm-inline-block d-lg-none"/>
                                 <read-more
                                     :text="address.code"
                                     :max-chars="30"
-                                    class="d-none d-lg-inline-block d-xl-none" />
+                                    class="d-none d-lg-inline-block d-xl-none"/>
                                 <span class="d-none d-xl-inline-block">{{ address.code }}</span>
                             </td>
                         </tr>
@@ -105,10 +105,17 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr>
+                            <td/>
+                            <td>
+                                <nuxt-link
+                                    :to="{name: 'download', query: {address: address.hash}}">Download Data</nuxt-link>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="text-center text-lg-right tomo-qrcode">
-                    <div>
+                    <div class="text-center">
                         <button
                             v-clipboard="address.hash"
                             type="button"
@@ -117,7 +124,7 @@
                             <i class="fa fa-clipboard"/> Copy
                         </button>
                     </div>
-                    <div>
+                    <div class="text-center">
                         <vue-qrcode
                             :value="address.hash"
                             :options="{size: 250}"
@@ -130,32 +137,17 @@
         <b-tabs
             ref="allTabs"
             v-model="tabIndex"
-            class="tomo-tabs"
-            @input="onSwitchTab">
-            <!--:title="'In Transactions (' + formatNumber(inTxsCount) + ')'"-->
+            class="tomo-tabs">
             <b-tab
-                id="inTransactions"
-                title="In Transactions"
-                href="#inTransactions">
+                id="transactions"
+                title="Transactions"
+                href="#transactions">
                 <table-tx-by-account
                     :address="hash"
-                    :type="'in'"
+                    :type="'all'"
                     :parent="'#inTransactions'"
                     :page="this"/>
             </b-tab>
-            <!--:title="'Out Transactions (' + formatNumber(outTxsCount) + ')'"-->
-            <b-tab
-                v-if="!address.isContract"
-                id="outTransactions"
-                title="Out Transactions"
-                href="#outTransactions">
-                <table-tx-by-account
-                    :address="hash"
-                    :type="'out'"
-                    :parent="'#outTransactions'"
-                    :page="this"/>
-            </b-tab>
-            <!--:title="'Internal Transactions (' + formatNumber(internalTxsCount) + ')'"-->
             <b-tab
                 id="internalTransactions"
                 title="Internal Transactions"
@@ -165,18 +157,6 @@
                     :parent="'#internalTransactions'"
                     :page="this"/>
             </b-tab>
-            <!--:title="'Created Blocks (' + formatNumber(blocksCount) + ')'"-->
-            <b-tab
-                v-if="!address.isContract"
-                id="minedBlocks"
-                title="Created Blocks"
-                href="#minedBlocks">
-                <table-block-by-account
-                    :address="hash"
-                    :page="this"
-                    :parent="'minedBlocks'"/>
-            </b-tab>
-            <!--:title="'Token Holding (' + formatNumber(tokensCount) + ')'"-->
             <b-tab
                 v-if="address && address.hasRrc20"
                 id="rrc20Holding"
@@ -230,20 +210,8 @@
                 <read-contract
                     :contract="hash"/>
             </b-tab>
-            <!--:title="'Events (' + formatNumber(eventsCount) + ')'"-->
             <b-tab
                 v-if="!address.isContract"
-                id="events"
-                title="Events"
-                href="#events">
-                <table-event
-                    :address="hash"
-                    :parent="'events'"
-                    :page="this"/>
-            </b-tab>
-            <!--:title="'Rewards (' + formatNumber(rewardTime) + ')'"-->
-            <b-tab
-                v-if="hasReward && !address.isContract"
                 id="rewards"
                 title="Rewards"
                 href="#rewards">
@@ -252,18 +220,54 @@
                     :parent="'rewards'"
                     :page="this"/>
             </b-tab>
+            <b-tab
+                id="tradeHistories"
+                title="Trade History"
+                href="#tradeHistories">
+                <table-trade-history
+                    :user-address="hash"/>
+            </b-tab>
+            <b-tab
+                id="lendingTrades"
+                title="Lending Trade"
+                href="#lendingTrades">
+                <table-lending-trade
+                    :user-address="hash"/>
+            </b-tab>
+            <b-tab
+                id="lendingTopup"
+                title="Lending Topup"
+                href="#lendingTopup">
+                <table-lending-topup
+                    :user-address="hash"/>
+            </b-tab>
+            <b-tab
+                id="lendingRepay"
+                title="Lending Repay"
+                href="#lendingRepay">
+                <table-lending-repay
+                    :user-address="hash"/>
+            </b-tab>
+            <b-tab
+                id="lendingRecall"
+                title="Lending Recalls"
+                href="#lendingRecall">
+                <table-lending-recall
+                    :user-address="hash"/>
+            </b-tab>
         </b-tabs>
     </section>
 </template>
 <script>
 import mixin from '~/plugins/mixin'
-import TableTx from '~/components/TableTx'
 import TableTxByAccount from '~/components/TableTxByAccount'
 import TableInternalTx from '~/components/TableInternalTx'
-import TableTokenTx from '~/components/TableTokenTx'
 import TableTokensByAccount from '~/components/TableTokensByAccount'
-import TableBlockByAccount from '~/components/TableBlockByAccount'
-import TableEvent from '~/components/TableEvent'
+import TableTradeHistory from '~/components/TableTradeHistory'
+import TableLendingTrade from '~/components/TableLendingTrade'
+import TableLendingTopup from '~/components/TableLendingTopup'
+import TableLendingRepay from '~/components/TableLendingRepay'
+import TableLendingRecall from '~/components/TableLendingRecall'
 import ReadMore from '~/components/ReadMore'
 import VueQrcode from '@xkeshi/vue-qrcode'
 import ReadContract from '~/components/ReadContract'
@@ -272,40 +276,28 @@ import ReadSourceCode from '~/components/ReadSourceCode'
 
 export default {
     components: {
+        TableLendingRecall,
         ReadSourceCode,
-        TableTx,
         TableTxByAccount,
         TableInternalTx,
-        TableTokenTx,
         TableTokensByAccount,
-        TableBlockByAccount,
-        TableEvent,
         ReadMore,
         VueQrcode,
         ReadContract,
-        TableReward
+        TableReward,
+        TableTradeHistory,
+        TableLendingTrade,
+        TableLendingTopup,
+        TableLendingRepay
     },
     mixins: [mixin],
-    head () {
-        return {
-            title: 'Address ' + this.hash
-        }
-    },
     data: () => ({
         hash: null,
         address: null,
         smartContract: null,
-        inTxsCount: 0,
-        outTxsCount: 0,
-        tokenTxsCount: 0,
-        internalTxsCount: 0,
-        contractTxsCount: 0,
-        blocksCount: 0,
-        eventsCount: 0,
-        tokensCount: 0,
         loading: true,
-        hasReward: true,
-        rewardTime: 0,
+        totalInTx: 0,
+        totalOutTx: 0,
         tabIndex: 0
     }),
     computed: {
@@ -324,87 +316,48 @@ export default {
         }
     },
     created () {
-        let hash = this.$route.params.slug
+        const hash = this.$route.params.slug
         if (hash) {
             this.hash = hash.toLowerCase()
         }
     },
     mounted () {
         try {
-            let self = this
-
             // Init breadcrumbs data.
             this.$store.commit('breadcrumb/setItems', {
                 name: 'address-slug',
-                to: { name: 'address-slug', params: { slug: self.hash } }
+                to: { name: 'address-slug', params: { slug: this.hash } }
             })
 
-            self.getAccountFromApi()
-            self.getUSDPrice()
+            this.getAccountFromApi()
+            this.getUSDPrice()
         } catch (error) {
             console.log(error)
         }
     },
     methods: {
         async getAccountFromApi () {
-            let self = this
+            this.loading = true
 
-            self.loading = true
-            let params = {}
-
-            if (self.hash) {
-                params.address = self.hash
-            }
-
-            params.list = 'address'
-
-            let query = this.serializeQuery(params)
-
-            let responses = await Promise.all([
-                this.$axios.get('/api/accounts/' + self.hash),
-                this.$axios.get('/api/counting' + '?' + query)
+            const responses = await Promise.all([
+                this.$axios.get('/api/accounts/' + this.hash)
             ])
 
-            self.address = responses[0].data
-            self.smartContract = responses[0].data.contract
+            this.address = responses[0].data
+            this.smartContract = responses[0].data.contract
 
-            self.blocksCount = responses[1].data.minedBlocks
-
-            self.eventsCount = responses[1].data.events
-
-            self.inTxsCount = responses[1].data.inTxes
-            self.outTxsCount = responses[1].data.outTxes
-            self.internalTxsCount = responses[1].data.internalTxes
-            self.contractTxsCount = responses[1].data.contractTxes
-            self.totalTxsCount = responses[1].data.totalTxes
-
-            self.rewardTime = responses[1].data.rewards
-
-            self.tokensCount = responses[1].data.tokenHolders
-
-            self.loading = false
+            this.loading = false
         },
         async getUSDPrice () {
-            let self = this
-
-            self.$store.dispatch('app/getUSDPrice')
-        },
-        onSwitchTab: function () {
-            const allTabs = this.$refs.allTabs
-            const location = window.location
-            const value = this.tabIndex
-            if (allTabs) {
-                // if (location.hash !== allTabs.tabs[value].href) {
-                //     this.$router.replace({
-                //         hash: allTabs.tabs[value].href
-                //     })
-                // } else {
-                location.hash = allTabs.tabs[value].href
-                // }
-            }
+            this.$store.dispatch('app/getUSDPrice')
         },
         copyAddress () {
             this.$toast.show('Copied')
+        }
+    },
+    head () {
+        return {
+            title: 'Address ' + this.hash
         }
     }
 }

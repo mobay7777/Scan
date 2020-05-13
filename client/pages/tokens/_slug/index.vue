@@ -7,8 +7,8 @@
             <div class="tomo-card__header">
                 <h2 class="tomo-card__headline">
                     <img
-                        v-if="isVerified"
-                        :src="'https://raw.githubusercontent.com/rupayaproject/tokens/master/tokens/' + hash + '.png'"
+                        v-if="checkAvatarExist(tokenBranch, hash)"
+                        :src="`https://raw.githubusercontent.com/rupayaproject/tokens/${tokenBranch}/tokens/${hash}.png`"
                         width="35px">
                     {{ tokenName }}&nbsp;</h2>
                 <i
@@ -226,11 +226,6 @@ export default {
         TableTokenRrc21Holder
     },
     mixins: [mixin],
-    head () {
-        return {
-            title: 'Token ' + this.$route.params.slug + ' Info'
-        }
-    },
     data () {
         return {
             hash: null,
@@ -247,7 +242,8 @@ export default {
             address: null,
             smartContract: null,
             holderBalance: 0,
-            tabIndex: 0
+            tabIndex: 0,
+            tokenBranch: process.env.TOKEN_BRANCH
         }
     },
     computed: {
@@ -256,11 +252,11 @@ export default {
         }
     },
     created () {
-        this.hash = this.$route.params.slug
+        this.hash = this.$route.params.slug.toLowerCase()
     },
     async mounted () {
         try {
-            let self = this
+            const self = this
 
             self.loading = true
 
@@ -270,16 +266,16 @@ export default {
                 to: { name: 'tokens-slug', params: { slug: self.hash } }
             })
 
-            let params = {}
+            const params = {}
 
             if (self.hash) {
                 params.token = self.hash
             }
 
             params.list = 'token'
-            let query = this.serializeQuery(params)
+            const query = this.serializeQuery(params)
 
-            let responses = await Promise.all([
+            const responses = await Promise.all([
                 self.$axios.get('/api/tokens/' + self.hash),
                 self.$axios.get('/api/counting' + '?' + query)
             ])
@@ -303,9 +299,9 @@ export default {
     },
     methods: {
         async getAccountFromApi () {
-            let self = this
+            const self = this
 
-            let { data } = await this.$axios.get('/api/accounts/' + self.hash)
+            const { data } = await this.$axios.get('/api/accounts/' + self.hash)
             self.address = data
             self.smartContract = data.contract
         },
@@ -322,6 +318,11 @@ export default {
                     location.hash = allTabs.tabs[value].href
                 }
             }
+        }
+    },
+    head () {
+        return {
+            title: 'Token ' + this.$route.params.slug + ' Info'
         }
     }
 }

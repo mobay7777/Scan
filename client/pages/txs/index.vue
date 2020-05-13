@@ -12,7 +12,10 @@ export default {
     mounted () {
         // Init breadcrumbs data.
         this.$store.commit('breadcrumb/setItems', { name: 'txs', to: { name: 'txs' } })
-    }
+    },
+    head: () => ({
+        title: 'Transactions'
+    })
 }
 </script>
 

@@ -5,56 +5,56 @@ const Web3Util = require('./web3')
 const BigNumber = require('bignumber.js')
 const DEFAULT_ABI = [
     {
-        'constant': true,
-        'inputs': [
+        constant: true,
+        inputs: [
             {
-                'name': 'tokenOwner',
-                'type': 'address'
+                name: 'tokenOwner',
+                type: 'address'
             }
         ],
-        'name': 'balanceOf',
-        'outputs': [
+        name: 'balanceOf',
+        outputs: [
             {
-                'name': 'balance',
-                'type': 'uint256'
+                name: 'balance',
+                type: 'uint256'
             }
         ],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
     },
     {
-        'constant': true,
-        'inputs': [
+        constant: true,
+        inputs: [
             {
-                'name': 'tokenOwner',
-                'type': 'address'
+                name: 'tokenOwner',
+                type: 'address'
             },
             {
-                'name': 'spender',
-                'type': 'address'
+                name: 'spender',
+                type: 'address'
             }
         ],
-        'name': 'allowance',
-        'outputs': [
+        name: 'allowance',
+        outputs: [
             {
-                'name': 'remaining',
-                'type': 'uint256'
+                name: 'remaining',
+                type: 'uint256'
             }
         ],
-        'payable': false,
-        'stateMutability': 'view',
-        'type': 'function'
+        payable: false,
+        stateMutability: 'view',
+        type: 'function'
     }
 ]
 
-let TokenHelper = {
+const TokenHelper = {
     getTokenFuncs: async () => ({
-        'decimals': '0x313ce567', // hex to decimal
-        'symbol': '0x95d89b41', // hex to ascii
-        'totalSupply': '0x18160ddd',
-        'transfer': '0xa9059cbb',
-        'name': '0x06fdde03'
+        decimals: '0x313ce567', // hex to decimal
+        symbol: '0x95d89b41', // hex to ascii
+        totalSupply: '0x18160ddd',
+        transfer: '0xa9059cbb',
+        name: '0x06fdde03'
     }),
 
     checkTokenType: async (code) => {
@@ -82,10 +82,10 @@ let TokenHelper = {
             'transferFrom': '0x23b872dd',
             'approve': '0x095ea7b3',
             // 'setApprovalForAll': '0xa22cb465',
-            'getApproved': '0x081812fc',
+            getApproved: '0x081812fc',
             // 'isApprovedForAll': '0x7070ce33',
-            'supportsInterface': '0x01ffc9a7',
-            'totalSupply': '0x18160ddd'
+            supportsInterface: '0x01ffc9a7',
+            totalSupply: '0x18160ddd'
         }
         let rrc21Function = {
             'totalSupply': '0x18160ddd',
@@ -147,8 +147,8 @@ let TokenHelper = {
     },
 
     checkIsToken:async (code) => {
-        let tokenFuncs = await TokenHelper.getTokenFuncs()
-        for (let name in tokenFuncs) {
+        const tokenFuncs = await TokenHelper.getTokenFuncs()
+        for (const name in tokenFuncs) {
             let codeCheck = tokenFuncs[name]
             codeCheck = codeCheck.replace('0x', '')
             if (code.indexOf(codeCheck) >= 0) {
@@ -160,7 +160,7 @@ let TokenHelper = {
     },
     checkMintable: async (code) => {
         // mint(address,uint256)
-        let mintFunction = '0x40c10f19'.replace('0x', '')
+        const mintFunction = '0x40c10f19'.replace('0x', '')
         if (code.indexOf(mintFunction) >= 0) {
             return true
         }
@@ -175,12 +175,15 @@ let TokenHelper = {
     },
 
     getTokenBalance: async (token, holder) => {
-        let web3 = await Web3Util.getWeb3()
-        let web3Contract = new web3.eth.Contract(DEFAULT_ABI, token.hash)
-        let result = await web3Contract.methods.balanceOf(holder).call()
+        const web3 = await Web3Util.getWeb3()
+        const web3Contract = new web3.eth.Contract(DEFAULT_ABI, token.hash)
+        if (holder === '0x0000000000000000000000000000000000000000') {
+            return { quantity: '0', quantityNumber: 0 }
+        }
+        const result = await web3Contract.methods.balanceOf(holder).call()
 
-        let quantity = new BigNumber(await web3.utils.hexToNumberString(result.balance))
-        let quantityNumber = quantity.dividedBy(10 ** token.decimals).toNumber()
+        const quantity = new BigNumber(await web3.utils.hexToNumberString(result.balance))
+        const quantityNumber = quantity.dividedBy(10 ** token.decimals).toNumber()
         return { quantity: quantity.toString(10), quantityNumber: quantityNumber }
     }
 }

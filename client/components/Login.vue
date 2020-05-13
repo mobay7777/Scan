@@ -1,7 +1,7 @@
 <template>
     <b-modal
-        ref="modalRegister"
         :id="modalId"
+        ref="modalRegister"
         class="tomo-modal"
         title="Log in"
         @ok="validate"
@@ -105,13 +105,13 @@ export default {
             }
         },
         async login () {
-            let self = this
+            const self = this
 
             const email = self.formEmail
             const password = self.formPassword
 
             try {
-                let data = await self.$store.dispatch('user/login', { email, password })
+                const data = await self.$store.dispatch('user/login', { email, password })
 
                 if (!data) {
                     self.errorMessage = 'Can\'t log in to your account. Please check again.'

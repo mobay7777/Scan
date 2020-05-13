@@ -69,7 +69,7 @@ class BreadCrumbManager {
 }
 
 // Init breadcrumbs routes.
-let br = new BreadCrumbManager()
+const br = new BreadCrumbManager()
 br.register('index', (brs) => {
     brs.push('Home', { name: 'index' })
 })
@@ -95,7 +95,7 @@ br.register('address-slug', (brs, location) => {
 })
 br.register('txs', (brs) => {
     brs.parent('index')
-    let block = mixin.methods.getParameterByName('block')
+    const block = mixin.methods.getParameterByName('block')
     if (block) {
         brs.push('Blocks', { name: 'blocks' })
         brs.push(`Transaction for Block #${block}`, window.location.pathname + window.location.search)
@@ -110,6 +110,22 @@ br.register('txs-slug', (brs, location) => {
 br.register('tokens', (brs) => {
     brs.parent('index')
     brs.push('Tokens', { name: 'tokens' })
+})
+br.register('orders', (brs) => {
+    brs.parent('index')
+    brs.push('Orders', { name: 'orders' })
+})
+br.register('orders-slug', (brs, location) => {
+    brs.parent('orders')
+    brs.push('Orders Detail', location)
+})
+br.register('trades', (brs) => {
+    brs.parent('index')
+    brs.push('Trades History', { name: 'trades' })
+})
+br.register('trades-slug', (brs, location) => {
+    brs.parent('trades')
+    brs.push('Trade Detail', location)
 })
 br.register('tokens-slug', (brs, location) => {
     brs.parent('tokens')
@@ -175,9 +191,57 @@ br.register('epochs', (brs) => {
     brs.parent('index')
     brs.push('Epochs', { name: 'epochs' })
 })
+br.register('download', (brs) => {
+    brs.parent('index')
+    brs.push('Download', { name: 'download' })
+})
 br.register('epochs-slug', (brs) => {
     brs.parent('epochs')
     brs.push('Epochs detail', { name: 'epochs-slug' })
+})
+br.register('lending-orders', (brs) => {
+    brs.parent('index')
+    brs.push('Lending Orders', { name: 'lending-orders' })
+})
+br.register('lending-orders-slug', (brs) => {
+    brs.parent('lending-orders')
+    brs.push('Lending Order Detail', { name: 'lending-orders-slug' })
+})
+br.register('lending-recalls', (brs) => {
+    brs.parent('index')
+    brs.push('Lending Recalls', { name: 'lending-recalls' })
+})
+br.register('lending-recalls-slug', (brs) => {
+    brs.parent('lending-recalls')
+    brs.push('Lending Recall Detail', { name: 'lending-recalls-slug' })
+})
+br.register('lending-trades', (brs) => {
+    brs.parent('index')
+    brs.push('Lending Trades', { name: 'lending-trades' })
+})
+br.register('lending-trades-slug', (brs) => {
+    brs.parent('lending-trades')
+    brs.push('Lending Trade Detail', { name: 'lending-trades-slug' })
+})
+br.register('lending-topup', (brs) => {
+    brs.parent('index')
+    brs.push('Lending Topup', { name: 'lending-topup' })
+})
+br.register('lending-topup-slug', (brs) => {
+    brs.parent('lending-topup')
+    brs.push('Lending Topup Detail', { name: 'lending-topup-slug' })
+})
+br.register('lending-repay', (brs) => {
+    brs.parent('index')
+    brs.push('Lending Repay', { name: 'lending-repay' })
+})
+br.register('lending-repay-slug', (brs) => {
+    brs.parent('lending-repay')
+    brs.push('Lending Repay Detail', { name: 'lending-repay-slug' })
+})
+br.register('relayers', (brs) => {
+    brs.parent('index')
+    brs.push('Relayers', { name: 'relayers' })
 })
 
 export const state = () => ({
@@ -186,8 +250,7 @@ export const state = () => ({
 
 export const mutations = {
     setItems (state, payload) {
-        let items = br.generate(payload.name, payload.to)
-        state.items = items
+        state.items = br.generate(payload.name, payload.to)
     }
 }
 

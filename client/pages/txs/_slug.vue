@@ -7,7 +7,7 @@
             <span class="mr-2">TXID:</span>
             <read-more
                 :text="hash"
-                class="d-sm-none" />
+                class="d-sm-none"/>
             <read-more
                 :text="hash"
                 :max-chars="20"
@@ -28,8 +28,7 @@
                 <b-tabs
                     ref="allTabs"
                     v-model="tabIndex"
-                    class="tomo-tabs"
-                    @input="onSwitchTab">
+                    class="tomo-tabs">
                     <b-tab
                         title="Overview"
                         href="#overview">
@@ -46,7 +45,7 @@
                                             <td>
                                                 <read-more
                                                     :text="tx.hash"
-                                                    class="d-sm-none" />
+                                                    class="d-sm-none"/>
                                                 <read-more
                                                     :text="tx.hash"
                                                     :max-chars="20"
@@ -75,7 +74,7 @@
                                                     <span>
                                                         ({{ (tx.latestBlockNumber - tx.blockNumber > 0)
                                                             ? tx.latestBlockNumber - tx.blockNumber
-                                                        : 0 }} block confirmation)
+                                                            : 0 }} block confirmation)
                                                     </span>
                                                 </span>
 
@@ -86,8 +85,8 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Time Stamp</td>
-                                            <td v-html="tx.timestamp_moment"/>
+                                            <td>Timestamp</td>
+                                            <td>{{ tx.timestamp_moment }}</td>
                                         </tr>
                                         <tr>
                                             <td>From</td>
@@ -187,7 +186,7 @@
                                                             {{ tokenTx.to }}</nuxt-link>
                                                         <span class="text-secondary"> For </span>
                                                         <span class="internal-color">{{
-                                                        toTokenQuantity(tokenTx.value, tokenTx.decimals) }}</span>
+                                                            toTokenQuantity(tokenTx.value, tokenTx.decimals) }}</span>
                                                         <nuxt-link
                                                             :to="{
                                                                 name: 'tokens-slug',
@@ -340,6 +339,65 @@
                             :tx="hash"
                             :page="this"/>
                     </b-tab>
+                    <b-tab
+                        v-if="
+                            ['0x0000000000000000000000000000000000000093', '0x0000000000000000000000000000000000000094']
+                                .includes(tx.to)"
+                        id="lendingOrders"
+                        title="Lending Orders"
+                        href="#lendingOrders">
+                        <table-lending-order :tx-hash="hash"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="
+                            ['0x0000000000000000000000000000000000000093', '0x0000000000000000000000000000000000000094']
+                                .includes(tx.to)"
+                        id="lendingTrades"
+                        title="Lending Trades"
+                        href="#lendingTrades">
+                        <table-lending-trade :tx-hash="hash"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="
+                            ['0x0000000000000000000000000000000000000093', '0x0000000000000000000000000000000000000094']
+                                .includes(tx.to)"
+                        id="lendingRepay"
+                        title="Lending Repay"
+                        href="#lendingRepay">
+                        <table-lending-repay :tx-hash="hash"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="
+                            ['0x0000000000000000000000000000000000000093', '0x0000000000000000000000000000000000000094']
+                                .includes(tx.to)"
+                        id="lendingTopup"
+                        title="Lending Topup"
+                        href="#lendingTopup">
+                        <table-lending-topup :tx-hash="hash"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="
+                            ['0x0000000000000000000000000000000000000093', '0x0000000000000000000000000000000000000094']
+                                .includes(tx.to)"
+                        id="lendingRecall"
+                        title="Lending Recalls"
+                        href="#lendingRecall">
+                        <table-lending-recall :tx-hash="hash"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="tx.to === '0x0000000000000000000000000000000000000091'"
+                        id="openOrders"
+                        title="Open Orders"
+                        href="#openOrders">
+                        <table-order :tx-hash="hash"/>
+                    </b-tab>
+                    <b-tab
+                        v-if="tx.to === '0x0000000000000000000000000000000000000091'"
+                        id="tradeHistories"
+                        title="Trade Histories"
+                        href="#tradeHistories">
+                        <table-trade-history :tx-hash="hash"/>
+                    </b-tab>
                 </b-tabs>
             </b-col>
         </b-row>
@@ -349,18 +407,27 @@
 import mixin from '~/plugins/mixin'
 import TableEvent from '~/components/TableEvent'
 import ReadMore from '~/components/ReadMore'
+import TableLendingTrade from '~/components/TableLendingTrade'
+import TableLendingOrder from '~/components/TableLendingOrder'
+import TableLendingRepay from '~/components/TableLendingRepay'
+import TableLendingTopup from '~/components/TableLendingTopup'
+import TableLendingRecall from '~/components/TableLendingRecall'
+import TableTradeHistory from '~/components/TableTradeHistory'
+import TableOrder from '~/components/TableOrder'
 
 export default {
     components: {
         TableEvent,
+        TableLendingTrade,
+        TableLendingOrder,
+        TableLendingRepay,
+        TableLendingTopup,
+        TableLendingRecall,
+        TableTradeHistory,
+        TableOrder,
         ReadMore
     },
     mixins: [mixin],
-    head () {
-        return {
-            title: 'Transaction ' + this.$route.params.slug + ' Info'
-        }
-    },
     data () {
         return {
             hash: null,
@@ -381,7 +448,7 @@ export default {
     },
     async mounted () {
         try {
-            let self = this
+            const self = this
             self.loading = true
 
             // Init breadcrumbs data.
@@ -390,24 +457,24 @@ export default {
                 to: { name: 'txs-slug', params: { slug: self.hash } }
             })
 
-            let params = {}
+            const params = {}
 
             if (self.hash) {
                 params.address = self.hash
             }
             params.list = 'txs'
 
-            let query = this.serializeQuery(params)
+            const query = this.serializeQuery(params)
 
-            let responses = await Promise.all([
+            const responses = await Promise.all([
                 this.$axios.get('/api/txs/' + self.hash),
                 this.$axios.get('/api/counting' + '?' + query)
             ])
 
             self.tx = responses[0].data
             self.inputData = self.tx.inputData ? self.tx.inputData : self.tx.input
-            let moment = self.$moment(responses[0].data.timestamp)
-            self.tx.timestamp_moment = `${moment.fromNow()} <small>(${moment.format('lll')} +UTC)</small>`
+            const moment = self.$moment(responses[0].data.timestamp)
+            self.tx.timestamp_moment = `${moment.fromNow()} (${moment})`
 
             self.eventsCount = responses[1].data.events
 
@@ -440,14 +507,11 @@ export default {
                     return true
                 })
             }
-        },
-        onSwitchTab () {
-            const allTabs = this.$refs.allTabs
-            if (allTabs) {
-                const value = this.tabIndex
-                const location = window.location
-                location.hash = allTabs.tabs[value].href
-            }
+        }
+    },
+    head () {
+        return {
+            title: 'Transaction ' + this.$route.params.slug + ' Info'
         }
     }
 }

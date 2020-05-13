@@ -63,8 +63,7 @@
             :limit="7"
             align="center"
             class="tomo-pagination"
-            @change="onChangePaginate"
-        />
+            @change="onChangePaginate"/>
     </section>
 </template>
 <script>
@@ -81,7 +80,7 @@ export default {
             type: String,
             default: ''
         },
-        token_type: {
+        tokenType: {
             type: String,
             default: ''
         },
@@ -99,7 +98,7 @@ export default {
     data: () => ({
         fields: {
             hash: { label: 'Token' },
-            quantity: { label: self.token_type === 'rrc721' ? 'Token ID' : 'Quantity' }
+            quantity: { label: 'Quantity' }
         },
         loading: true,
         total: 0,
@@ -109,39 +108,40 @@ export default {
         pages: 1,
         block: null
     }),
-    async mounted () {
-        this.getDataFromApi()
+    async created () {
+        if (this.tokenType === 'rrc721') {
+            this.fields.quantity.label = 'Token Id'
+        }
+        await this.getDataFromApi()
     },
     methods: {
         async getDataFromApi () {
-            let self = this
-
             // Show loading.
-            self.loading = true
+            this.loading = true
 
-            let params = {
-                page: self.currentPage,
-                limit: self.perPage
+            const params = {
+                page: this.currentPage,
+                limit: this.perPage
             }
 
-            let query = this.serializeQuery(params)
-            let { data } = await this.$axios.get(`/api/tokens/holding/${self.token_type}/${self.holder}` + '?' + query)
-            self.items = data.items
-            self.total = data.total
-            self.pages = data.pages
+            const query = this.serializeQuery(params)
+            const url = `/api/tokens/holding/${this.tokenType}/${this.holder}` + '?' + query
+            const { data } = await this.$axios.get(url)
+            this.items = data.items
+            this.total = data.total
+            this.pages = data.pages
 
-            if (self.page) {
-                self.page.tokensCount = self.total
+            if (this.page) {
+                this.page.tokensCount = this.total
             }
 
             // Hide loading.
-            self.loading = false
-
+            this.loading = false
             return data
         },
-        onChangePaginate (page) {
+        async onChangePaginate (page) {
             this.currentPage = page
-            this.getDataFromApi()
+            await this.getDataFromApi()
         }
     }
 }

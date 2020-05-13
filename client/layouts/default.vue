@@ -66,6 +66,30 @@
                             <b-dropdown-item :to="{name: 'blocks'}">Blocks</b-dropdown-item>
                             <b-dropdown-item :to="{name: 'epochs'}">Epochs</b-dropdown-item>
                         </b-nav-item-dropdown>
+                        <b-nav-item-dropdown
+                            text="Exchanges">
+                            <b-dropdown-item :to="{name: 'relayers'}">Relayers</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'orders'}">Orders</b-dropdown-item>
+                            <b-dropdown-item :to="{name: 'trades'}">Trade History</b-dropdown-item>
+                            <li
+                                id="lending-nav-id"
+                                class="nav-item lending-nav"
+                                @click="addClass()">
+                                <div class="nav-link-custom"><span>Lending</span></div>
+                                <ul class="dropdown-menu">
+                                    <b-dropdown-item :to="{name: 'lending-orders'}">
+                                        Lending Order</b-dropdown-item>
+                                    <b-dropdown-item :to="{name: 'lending-trades'}">
+                                        Lending Trade</b-dropdown-item>
+                                    <b-dropdown-item :to="{name: 'lending-topup'}">
+                                        Lending TopUp</b-dropdown-item>
+                                    <b-dropdown-item :to="{name: 'lending-repay'}">
+                                        Lending Repay</b-dropdown-item>
+                                    <b-dropdown-item :to="{name: 'lending-recalls'}">
+                                        Lending Recall</b-dropdown-item>
+                                </ul>
+                            </li>
+                        </b-nav-item-dropdown>
                     </b-navbar-nav>
                     <b-navbar-nav class="tomo-nav__login">
                         <b-nav-item
@@ -257,7 +281,6 @@
 <script>
 import Cookie from 'js-cookie'
 import mixin from '~/plugins/mixin'
-import MyFooter from '~/components/Footer.vue'
 import Breadcrumb from '~/components/Breadcrumb.vue'
 import Register from '~/components/Register.vue'
 import Login from '~/components/Login.vue'
@@ -266,7 +289,6 @@ import pkg from '../package.json'
 
 export default {
     components: {
-        MyFooter,
         Breadcrumb,
         Register,
         Login,
@@ -283,7 +305,7 @@ export default {
     },
     computed: {
         user () {
-            let user = this.$store.state.user
+            const user = this.$store.state.user
             return user ? user.data : null
         },
         isTxs () {
@@ -302,7 +324,7 @@ export default {
             return this.$route.fullPath.startsWith('/tokentxs')
         },
         isHomePage () {
-            let name = this.$route.name
+            const name = this.$route.name
             return name ? name.indexOf(['index']) >= 0 : false
         }
     },
@@ -314,7 +336,7 @@ export default {
         }
     },
     mounted () {
-        let self = this
+        const self = this
 
         self.$store.dispatch('user/getCachedUser')
 
@@ -331,7 +353,7 @@ export default {
     methods: {
 
         async onLogout () {
-            let self = this
+            const self = this
 
             await self.$store.dispatch('user/logout')
 
@@ -339,10 +361,10 @@ export default {
             self.$router.replace({ name: 'index' })
         },
         onGotoRoute () {
-            let search = this.search.trim()
-            let regexpTx = /[0-9a-zA-Z]{66}?/
-            let regexpAddr = /^(0x)?[0-9a-fA-F]{40}$/
-            let regexpBlock = /[0-9]+?/
+            const search = this.search.trim()
+            const regexpTx = /[0-9a-zA-Z]{66}?/
+            const regexpAddr = /^(0x)?[0-9a-fA-F]{40}$/
+            const regexpBlock = /[0-9]+?/
             let to = null
 
             if (regexpAddr.test(search)) {
@@ -360,12 +382,12 @@ export default {
             return this.$router.push(to)
         },
         async getStats () {
-            let self = this
-            let { data } = await self.$axios.get('/api/setting')
+            const self = this
+            const { data } = await self.$axios.get('/api/setting')
             self.stats = data.stats
         },
         toggleDarkMode (e) {
-            let darkMode = Cookie.get('tomoscan_theme') !== 'dark'
+            const darkMode = Cookie.get('tomoscan_theme') !== 'dark'
             this.darkMode = darkMode
 
             Cookie.set('tomoscan_theme', darkMode ? 'dark' : 'light', {
@@ -379,6 +401,10 @@ export default {
             } else {
                 document.body.classList.remove('dark-mode')
             }
+        },
+        addClass () {
+            const item = document.getElementById('lending-nav-id')
+            item.classList.toggle('active')
         }
     }
 }

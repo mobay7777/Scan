@@ -30,7 +30,7 @@
                 <div>
                     <i
                         v-if="props.item.isContract"
-                        class="tm tm-icon-contract mr-1 mr-lg-2" />
+                        class="tm tm-icon-contract mr-1 mr-lg-2"/>
                     <nuxt-link
                         :to="{name: 'address-slug', params: {slug: props.item.hash}}"
                         class="text-truncate">{{ props.item.hash }}</nuxt-link>
@@ -54,8 +54,7 @@
             :limit="7"
             align="center"
             class="tomo-pagination"
-            @change="onChangePaginate"
-        />
+            @change="onChangePaginate"/>
     </section>
 </template>
 
@@ -68,9 +67,6 @@ export default {
         TableBase
     },
     mixins: [mixin],
-    head: () => ({
-        title: 'Accounts'
-    }),
     data: () => ({
         fields: {
             rank: { label: 'Rank' },
@@ -86,7 +82,7 @@ export default {
     }),
     async mounted () {
         try {
-            let self = this
+            const self = this
 
             // Init breadcrumbs data.
             this.$store.commit('breadcrumb/setItems', { name: 'accounts', to: { name: 'accounts' } })
@@ -98,18 +94,18 @@ export default {
     },
     methods: {
         async getDataFromApi () {
-            let self = this
+            const self = this
 
             // Show loading.
             self.loading = true
 
-            let params = {
+            const params = {
                 page: self.currentPage || 1,
                 limit: self.perPage
             }
 
-            let query = this.serializeQuery(params)
-            let { data } = await this.$axios.get('/api/accounts' + '?' + query)
+            const query = this.serializeQuery(params)
+            const { data } = await this.$axios.get('/api/accounts' + '?' + query)
             self.items = data.items
             self.total = data.total
             self.pages = data.pages
@@ -124,7 +120,10 @@ export default {
             this.currentPage = page
             this.getDataFromApi()
         }
-    }
+    },
+    head: () => ({
+        title: 'Accounts'
+    })
 }
 </script>
 

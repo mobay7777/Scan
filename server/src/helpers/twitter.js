@@ -11,7 +11,7 @@ const twitter = new Twitter({
     access_token_key: config.get('twitter.access_token_key'),
     access_token_secret: config.get('twitter.access_token_secret')
 })
-let TwitterHelper = {
+const TwitterHelper = {
     alertBigTransfer: async (txHash, from, to, amount) => {
         try {
             amount = new BigNumber(amount)

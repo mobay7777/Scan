@@ -23,16 +23,15 @@ const mixin = {
 
         formatNumber: (number) => {
             number = new BigNumber(number.toString())
-            let seps = number.toString().split('.')
+            const seps = number.toString().split('.')
             seps[0] = seps[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             return seps.join('.')
         },
 
         toLongNumberString: (n) => {
-            let str
             let str2 = ''
-            let data = n.toExponential().replace('.', '').split(/e/i)
-            str = data[0]
+            const data = n.toExponential().replace('.', '').split(/e/i)
+            const str = data[0]
             let mag = Number(data[1])
 
             if (mag >= 0 && str.length > mag) {
@@ -64,7 +63,7 @@ const mixin = {
             BigNumber.config({ EXPONENTIAL_AT: [-100, 100] })
 
             let weiNumber = new BigNumber(wei)
-            let divided = 10 ** 18
+            const divided = 10 ** 18
 
             weiNumber = weiNumber.dividedBy(divided).toString()
 
@@ -84,7 +83,7 @@ const mixin = {
             BigNumber.config({ EXPONENTIAL_AT: [-100, 100] })
 
             let weiNumber = new BigNumber(wei)
-            let divided = 10 ** decimal
+            const divided = 10 ** decimal
 
             weiNumber = weiNumber.dividedBy(divided).toString()
 
@@ -94,8 +93,8 @@ const mixin = {
         toTomoNumber: (wei) => {
             BigNumber.config({ EXPONENTIAL_AT: [-100, 100] })
 
-            let weiNumber = new BigNumber(wei)
-            let divided = 10 ** 18
+            const weiNumber = new BigNumber(wei)
+            const divided = 10 ** 18
             return weiNumber.dividedBy(divided).toString()
             // web3.utils.fromWei(wei, 'ether')
         },
@@ -155,7 +154,7 @@ const mixin = {
         },
 
         copySourceCode (e) {
-            let id = e.trigger.parentNode.id
+            const id = e.trigger.parentNode.id
             let msg = ''
 
             if (id === 'code-actions--source') {
@@ -175,10 +174,10 @@ const mixin = {
 
         refreshCodeMirror () {
             this.$nextTick(() => {
-                if (this.$refs['readSourceCode']) {
-                    let readSourceCode = this.$refs['readSourceCode']
+                if (this.$refs.readSourceCode) {
+                    const readSourceCode = this.$refs.readSourceCode
                     for (const $ref in readSourceCode.$refs) {
-                        if (readSourceCode.$refs[$ref].hasOwnProperty('codemirror')) {
+                        if (Object.prototype.hasOwnProperty.call(readSourceCode.$refs[$ref], 'codemirror')) {
                             readSourceCode.$refs[$ref].codemirror.refresh()
                         }
                     }
@@ -187,15 +186,15 @@ const mixin = {
         },
         refreshInputTxCodeMirror () {
             this.$nextTick(() => {
-                if (this.$refs['readSourceCode']) {
-                    let readSourceCode = this.$refs['readSourceCode']
+                if (this.$refs.readSourceCode) {
+                    const readSourceCode = this.$refs.readSourceCode
                     readSourceCode.refresh()
                 }
             })
         },
         async filterAddress (filter, tokenType) {
             if (filter) {
-                let search = filter.trim()
+                const search = filter.trim()
                 let to
                 if (tokenType === 'rrc20') {
                     to = { name: 'tokens-slug-rrc20-holder', params: { slug: this.hash, holder: search } }
@@ -205,6 +204,31 @@ const mixin = {
                     to = { name: 'tokens-slug-rrc21-holder', params: { slug: this.hash, holder: search } }
                 }
                 return this.$router.push(to)
+            }
+        },
+        hiddenString (string, numberStringShowing) {
+            if (string === null || string === '') {
+                return ''
+            }
+            if (string.length <= numberStringShowing * 2 + 3) {
+                return string
+            }
+            const stringBeforeDot = String(string).substr(0, numberStringShowing)
+            const stringAfterDot = String(string).substr(-numberStringShowing)
+            return stringBeforeDot + '...' + stringAfterDot
+        },
+
+        checkAvatarExist: function (branch, token) {
+            const url = 'https://raw.githubusercontent.com/tomochain/tokens/' + branch +
+                '/tokens/' + token.toLowerCase() + '.png'
+            const xhr = new XMLHttpRequest()
+            xhr.open('HEAD', url, false)
+            xhr.send()
+
+            if (xhr.status === 404) {
+                return false
+            } else {
+                return true
             }
         }
     }

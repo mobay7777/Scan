@@ -18,6 +18,10 @@ const MasternodeController = require('./MasternodeController')
 const SignMessageController = require('./SignMessageController')
 const HomeController = require('./HomeController')
 const EpochController = require('./EpochController')
+const OrderController = require('./OrderController')
+const TradeController = require('./TradeController')
+const LendingController = require('./LendingController')
+const RelayerController = require('./RelayerController')
 
 const router = Router()
 
@@ -40,5 +44,9 @@ router.use(MasternodeController)
 router.use(SignMessageController)
 router.use(HomeController)
 router.use(EpochController)
+router.use(OrderController)
+router.use(TradeController)
+router.use(LendingController)
+router.use(RelayerController)
 
 module.exports = router

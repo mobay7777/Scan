@@ -56,25 +56,19 @@
             :link-gen="linkGen"
             :limit="7"
             align="center"
-            class="tomo-pagination"
-        />
+            class="tomo-pagination"/>
     </section>
 </template>
 
 <script>
 import mixin from '~/plugins/mixin'
 import TableBase from '~/components/TableBase'
-import ReadMore from '~/components/ReadMore'
 
 export default {
     components: {
-        TableBase,
-        ReadMore
+        TableBase
     },
     mixins: [mixin],
-    head: () => ({
-        title: 'Epoch'
-    }),
     data: () => ({
         fields: {
             epoch: { label: 'Epoch' },
@@ -115,18 +109,18 @@ export default {
     },
     methods: {
         async getDataFromApi () {
-            let self = this
+            const self = this
 
             // Show loading.
             self.loading = true
 
-            let params = {
+            const params = {
                 page: self.currentPage || 1,
                 limit: self.perPage
             }
 
-            let query = this.serializeQuery(params)
-            let { data } = await this.$axios.get('/api/epochs' + '?' + query)
+            const query = this.serializeQuery(params)
+            const { data } = await this.$axios.get('/api/epochs' + '?' + query)
             self.items = data.items
             self.total = data.total
             self.lastBlock = data.lastBlock
@@ -139,7 +133,7 @@ export default {
             return data
         },
         onChangePaginate (page) {
-            let self = this
+            const self = this
             self.currentPage = page
 
             self.getDataFromApi()
@@ -151,6 +145,9 @@ export default {
                 }
             }
         }
-    }
+    },
+    head: () => ({
+        title: 'Epochs'
+    })
 }
 </script>

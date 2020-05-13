@@ -4,56 +4,10 @@ const { paginate } = require('../helpers/utils')
 const TokenTransactionHelper = require('../helpers/tokenTransaction')
 const logger = require('../helpers/logger')
 const { check, validationResult } = require('express-validator/check')
+const config = require('config')
+const elastic = require('../helpers/elastic')
 
 const TokenTxController = Router()
-
-TokenTxController.get('/token-txs', [
-    check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
-    check('page').optional().isInt({ max: 500 }).withMessage('Page is less than or equal 500'),
-    check('address').optional().isLength({ min: 42, max: 42 }).withMessage('Account address is incorrect.'),
-    check('token').optional().isLength({ min: 42, max: 42 }).withMessage('Token address is incorrect.')
-], async (req, res) => {
-    let errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
-    }
-    let token = req.query.token
-    let address = req.query.address
-    try {
-        let params = {}
-        params.query = {}
-        let total = null
-        if (token) {
-            params.query = { address: token.toLowerCase() }
-
-            let tk = await db.Account.findOne({ hash: token.toLowerCase() })
-            if (tk) {
-                total = tk.totalTxCount
-            }
-        }
-        if (address) {
-            params.query = Object.assign(params.query,
-                { $or: [{ from: address.toLowerCase() }, { to: address.toLowerCase() }] })
-            total = null
-        }
-        params.sort = { blockNumber: -1 }
-        let data = await paginate(req, 'TokenTx', params, total)
-
-        let items = data.items
-        if (items.length) {
-            items = await TokenTransactionHelper.formatTokenTransaction(items)
-        }
-        data.items = items
-        if (data.pages > 500) {
-            data.pages = 500
-        }
-
-        return res.json(data)
-    } catch (e) {
-        logger.warn('Get list token tx: token %s | address %s error %s', token, address, e)
-        return res.status(500).json({ errors: { message: 'Something error!' } })
-    }
-})
 
 TokenTxController.get('/token-txs/:tokenType', [
     check('tokenType').exists().isString().withMessage('rrc20/rrc21/rrc721'),
@@ -62,45 +16,98 @@ TokenTxController.get('/token-txs/:tokenType', [
     check('holder').optional().isLength({ min: 42, max: 42 }).withMessage('Account address is incorrect.'),
     check('token').optional().isLength({ min: 42, max: 42 }).withMessage('Token address is incorrect.')
 ], async (req, res) => {
-    let errors = validationResult(req)
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
-    let token = req.query.token
-    let holder = req.query.holder
-    let tokenType = req.params.tokenType
-    try {
-        let params = {}
-        params.query = {}
-        let total = null
-        if (token) {
-            params.query = { address: token.toLowerCase() }
+    const token = req.query.token
+    const holder = req.query.holder
+    const tokenType = req.params.tokenType
 
-            let tk = await db.Account.findOne({ hash: token.toLowerCase() })
-            if (tk) {
-                total = tk.totalTxCount
-            }
-        }
-        if (holder) {
-            params.query = Object.assign(params.query,
-                { $or: [{ from: holder.toLowerCase() }, { to: holder.toLowerCase() }] })
-            total = null
-        }
-        params.sort = { blockNumber: -1 }
+    let limit = !isNaN(req.query.limit) ? parseInt(req.query.limit) : 25
+    limit = Math.min(100, limit)
+    const page = !isNaN(req.query.page) ? parseInt(req.query.page) : 1
+    let total = 0
+    try {
         let data
-        if (tokenType === 'rrc20') {
-            data = await paginate(req, 'TokenTx', params, total)
-        } else if (tokenType === 'rrc21') {
-            data = await paginate(req, 'TokenRrc21Tx', params, total)
-        } else if (tokenType === 'rrc721') {
-            data = await paginate(req, 'TokenNftTx', params, total)
+        if (!config.get('GetDataFromElasticSearch')) {
+            const params = {}
+            params.query = {}
+            if (token) {
+                params.query = { address: token.toLowerCase() }
+
+                const tk = await db.Account.findOne({ hash: token.toLowerCase() })
+                if (tk) {
+                    total = tk.totalTxCount
+                }
+            }
+            if (holder) {
+                params.query = Object.assign(params.query,
+                    { $or: [{ from: holder.toLowerCase() }, { to: holder.toLowerCase() }] })
+                total = null
+            }
+            params.sort = { blockNumber: -1 }
+            if (tokenType === 'rrc20') {
+                data = await paginate(req, 'TokenTx', params, total)
+            } else if (tokenType === 'rrc21') {
+                data = await paginate(req, 'TokenRrc21Tx', params, total)
+            } else if (tokenType === 'rrc721') {
+                data = await paginate(req, 'TokenNftTx', params, total)
+            } else {
+                data = {
+                    total: total,
+                    perPage: limit,
+                    currentPage: page,
+                    pages: 0,
+                    items: []
+                }
+            }
         } else {
+            let eData = {}
             data = {
-                total: total,
-                perPage: parseInt(req.query.limit) || 25,
-                currentPage: parseInt(req.query.page) || 1,
+                total: 0,
+                perPage: limit,
+                currentPage: page,
                 pages: 0,
                 items: []
+            }
+            const query = {}
+            if (token) {
+                query.match = { address: token.toLowerCase() }
+            }
+            if (holder) {
+                query.bool = {
+                    should: [
+                        { term: { from: holder.toLowerCase() } },
+                        { term: { to: holder.toLowerCase() } }
+                    ]
+                }
+            }
+            if (tokenType === 'rrc20') {
+                eData = await elastic.search('rrc20-tx', query, { blockNumber: 'desc' }, limit, page)
+                const count = await elastic.count('rrc20-tx', query)
+                total = count.count
+            } else if (tokenType === 'rrc21') {
+                eData = await elastic.search('rrc21-tx', query, { blockNumber: 'desc' }, limit, page)
+                const count = await elastic.count('rrc21-tx', query)
+                total = count.count
+            } else if (tokenType === 'rrc721') {
+                eData = await elastic.search('rrc721-tx', query, { blockNumber: 'desc' }, limit, page)
+                const count = await elastic.count('rrc721-tx', query)
+                total = count.count
+            } else {
+                eData = {}
+                total = 0
+            }
+            if (Object.prototype.hasOwnProperty.call(eData, 'hits')) {
+                const hits = eData.hits
+                data.total = total
+                data.pages = Math.ceil(data.total / limit)
+                const items = []
+                for (let i = 0; i < hits.hits.length; i++) {
+                    items.push(hits.hits[i]._source)
+                }
+                data.items = items
             }
         }
 
@@ -127,19 +134,19 @@ TokenTxController.get('/token-txs/:tokenType/:txHash', [
     check('limit').optional().isInt({ max: 50 }).withMessage('Limit is less than 50 items per page'),
     check('page').optional().isInt({ max: 500 }).withMessage('Page is less than or equal 500')
 ], async (req, res) => {
-    let errors = validationResult(req)
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
-    let holder = req.query.holder
-    let tokenType = req.params.tokenType
-    let txHash = req.params.txHash
-    let tx = await db.Tx.findOne({ hash: txHash })
+    const holder = req.query.holder
+    const tokenType = req.params.tokenType
+    const txHash = req.params.txHash
+    const tx = await db.Tx.findOne({ hash: txHash })
     if (!tx) {
         return res.status(404).json({ errors: { message: 'Tx hash does not exist!' } })
     }
     try {
-        let params = {}
+        const params = {}
         params.query = { transactionHash: txHash }
         if (holder) {
             params.query = Object.assign(params.query,

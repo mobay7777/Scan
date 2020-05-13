@@ -1,6 +1,10 @@
 {
   "APP_ENV": "prod",
-  "MONGODB_URI": "mongodb://mongodb:27017/scan",
+  "MONGODB_URI": "mongodb://mongo:27017/scan",
+  "MONGODB_DEX_URI": "mongodb://mongo:27017/rupayadex",
+  "ELASTICSEARCH": "http://localhost:9200",
+  "GetDataFromElasticSearch": true,
+  "MaxBlockIndex": 150000,
   "redis": {
     "host": "redis",
     "port": 6379,
@@ -10,26 +14,6 @@
   "logs": {
     "level": "debug"
   },
-  "defaultCandidate": [
-    {
-      "name": "yeñiçeri",
-      "owner": "0x99e39cb1819b9676391b34b7e8e321599157c657",
-      "candidate": "0x1e56eaa93778996a9e3fae74c297121ac1683bfb",
-      "cap": 500000
-    },
-    {
-      "name": "ghazi",
-      "owner": "0x99e39cb1819b9676391b34b7e8e321599157c657",
-      "candidate": "0x86772842b795c455a7ad87676795ae298d8d73ed",
-      "cap": 500000
-    },
-    {
-      "name": "sultan",
-      "owner": "0x99e39cb1819b9676391b34b7e8e321599157c657",
-      "candidate": "0x0aab66ed764880331e2c2abe2524ad5ee9e84731",
-      "cap": 500000
-    }
-  ],
 
   "WEB3_URI": "https://socket.rupaya.io",
   "WEB3_WS_URI": "wss://ws.rupaya.io/ws/",

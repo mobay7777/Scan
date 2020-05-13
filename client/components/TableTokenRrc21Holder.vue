@@ -45,8 +45,7 @@
             :limit="7"
             align="center"
             class="tomo-pagination"
-            @change="onChangePaginate"
-        />
+            @change="onChangePaginate"/>
     </section>
 </template>
 <script>
@@ -93,11 +92,11 @@ export default {
     },
     methods: {
         async getDataFromApi () {
-            let self = this
+            const self = this
 
             // Show loading.
             self.loading = true
-            let params = {
+            const params = {
                 page: self.currentPage,
                 limit: self.perPage
             }

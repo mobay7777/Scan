@@ -18,9 +18,9 @@ HomeController.get('/circulatingSupply', async (req, res) => {
     circulatingSupply = circulatingSupply.multipliedBy(10 ** 18)
         .plus(totalReward.multipliedBy(10 ** 18)).minus(foundationBalance).minus(teamBalance)
 
-    let circulatingNumber = circulatingSupply.dividedBy(10 ** 18)
+    const circulatingNumber = circulatingSupply.dividedBy(10 ** 18)
 
-    let maxSupply = 100 * 10 ** 6
+    const maxSupply = 100 * 10 ** 6
     return res.json({ circulatingSupply: circulatingNumber.toNumber(), maxSupply: maxSupply })
 })
 HomeController.get('/totalcoins', async (req, res) => {
@@ -40,7 +40,7 @@ HomeController.get('/totalcoins', async (req, res) => {
 })
 
 HomeController.get('/jobNumber', async (req, res) => {
-    let countJobs = () => {
+    const countJobs = () => {
         return new Promise((resolve, reject) => {
             q.inactiveCount((err, l) => {
                 if (err) {

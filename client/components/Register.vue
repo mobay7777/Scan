@@ -1,7 +1,7 @@
 <template>
     <b-modal
-        ref="modalRegister"
         :id="modalId"
+        ref="modalRegister"
         class="tomo-modal"
         title="Register"
         @ok="validate"
@@ -117,7 +117,7 @@ export default {
             }
         },
         async register () {
-            let self = this
+            const self = this
 
             const email = self.formEmail
             const password = self.formPassword

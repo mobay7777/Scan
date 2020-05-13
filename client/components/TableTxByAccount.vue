@@ -62,16 +62,16 @@
                 slot-scope="props">
                 <i
                     v-if="props.item.from_model && props.item.from_model.isContract"
-                    class="tm tm-icon-contract mr-1 mr-lg-2" />
+                    class="tm tm-icon-contract mr-1 mr-lg-2"/>
                 <span
                     v-if="address == props.item.from"
                     class="text-truncate">{{ (props.item.from_model && props.item.from_model.accountName) ?
-                    props.item.from_model.accountName : props.item.from }}</span>
+                        props.item.from_model.accountName : props.item.from }}</span>
                 <nuxt-link
                     v-else
                     :to="{name: 'address-slug', params: {slug: props.item.from}}"
                     class="text-truncate">{{ (props.item.from_model && props.item.from_model.accountName) ?
-                    props.item.from_model.accountName : props.item.from }}</nuxt-link>
+                        props.item.from_model.accountName : props.item.from }}</nuxt-link>
             </template>
 
             <template
@@ -88,16 +88,16 @@
                 <div v-if="props.item.to">
                     <i
                         v-if="props.item.to_model && props.item.to_model.isContract"
-                        class="tm tm-icon-contract mr-1 mr-lg-2" />
+                        class="tm tm-icon-contract mr-1 mr-lg-2"/>
                     <span
                         v-if="address == props.item.to"
                         class="text-truncate">{{ (props.item.to_model && props.item.to_model.accountName) ?
-                        props.item.to_model.accountName : props.item.to }}</span>
+                            props.item.to_model.accountName : props.item.to }}</span>
                     <nuxt-link
                         v-else
                         :to="{name: 'address-slug', params:{slug: props.item.to}}"
                         class="text-truncate">{{ (props.item.to_model && props.item.to_model.accountName) ?
-                        props.item.to_model.accountName : props.item.to }}</nuxt-link>
+                            props.item.to_model.accountName : props.item.to }}</nuxt-link>
                 </div>
                 <div
                     v-else
@@ -127,8 +127,7 @@
             :limit="7"
             align="center"
             class="tomo-pagination"
-            @change="onChangePaginate"
-        />
+            @change="onChangePaginate"/>
     </section>
 </template>
 
@@ -141,17 +140,6 @@ export default {
         TableBase
     },
     mixins: [mixin],
-    head () {
-        if (this.block) {
-            return {
-                title: 'Block ' + this.$route.params.slug + ' Info'
-            }
-        } else {
-            return {
-                title: this.isPending() ? 'Transactions Pending' : 'Transactions'
-            }
-        }
-    },
     props: {
         address: {
             type: String,
@@ -196,50 +184,55 @@ export default {
     },
     methods: {
         async getDataFromApi () {
-            let self = this
-
             // Show loading.
-            self.loading = true
-            let params = {
-                page: self.currentPage,
-                limit: self.perPage
+            this.loading = true
+            const params = {
+                page: this.currentPage,
+                limit: this.perPage
             }
 
-            params.tx_type = self.type
-            let query = this.serializeQuery(params)
-            let { data } = await this.$axios.get('/api/txs/listByAccount/' + self.address + '?' + query)
-            self.total = data.total || self.tx_total || (data.items || []).length
-            self.pages = data.pages || (self.total % self.perPage)
+            params.tx_type = this.type
+            const query = this.serializeQuery(params)
+            const { data } = await this.$axios.get('/api/txs/listByAccount/' + this.address + '?' + query)
+            this.total = data.total || this.tx_total || (data.items || []).length
+            this.pages = data.pages || (this.total % this.perPage)
 
             if (data.items.length === 0) {
-                self.loading = false
+                this.loading = false
             }
-            if (self.page) {
-                self.page.txsCount = self.total
+            if (this.page) {
+                if (this.type === 'in') {
+                    this.page.totalInTx = this.total
+                } else if (this.type === 'out') {
+                    this.page.totalOutTx = this.total
+                } else {
+                    this.page.totalInTx = this.total
+                    this.page.totalOutTx = 0
+                }
             }
 
             data.items.forEach(async (item, index, array) => {
                 if (index === array.length - 1) {
-                    self.items = array
+                    this.items = array
 
                     // Format data.
-                    if (self.blockNumber) {
-                        self.items = self.formatData(self.items, self.block_timestamp)
+                    if (this.blockNumber) {
+                        this.items = this.formatData(this.items, this.block_timestamp)
                     } else {
-                        self.items = self.formatData(self.items, null)
+                        this.items = this.formatData(this.items, null)
                     }
 
                     // Hide loading.
-                    self.loading = false
+                    this.loading = false
                 }
             })
 
             return data
         },
         formatData (items = [], blockTimestamp) {
-            let _items = []
+            const _items = []
             items.forEach((item) => {
-                let _item = item
+                const _item = item
 
                 // Format for timestamp.
                 if (blockTimestamp) {
@@ -265,6 +258,17 @@ export default {
         },
         isPending () {
             return this.type === 'pending'
+        }
+    },
+    head () {
+        if (this.block) {
+            return {
+                title: 'Block ' + this.$route.params.slug + ' Info'
+            }
+        } else {
+            return {
+                title: this.isPending() ? 'Transactions Pending' : 'Transactions'
+            }
         }
     }
 }

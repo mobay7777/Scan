@@ -5,7 +5,12 @@
     <section v-else>
         <div class="card tomo-card tomo-card--token">
             <div class="tomo-card__header">
-                <h2 class="tomo-card__headline">{{ tokenName }}&nbsp;</h2>
+                <h2 class="tomo-card__headline">
+                    <img
+                        v-if="checkAvatarExist(tokenBranch, hash)"
+                        :src="`https://raw.githubusercontent.com/tomochain/tokens/${tokenBranch}/tokens/${hash}.png`"
+                        width="35px">
+                    {{ tokenName }}&nbsp;</h2>
                 <i
                     v-if="moreInfo"
                     class="fa fa-check-circle token-status"
@@ -170,11 +175,6 @@ export default {
         TableInventory
     },
     mixins: [mixin],
-    head () {
-        return {
-            title: 'Token RRC721 Holder Info'
-        }
-    },
     data () {
         return {
             hash: null,
@@ -188,7 +188,8 @@ export default {
             holder: null,
             addressFilter: null,
             address: null,
-            smartContract: null
+            smartContract: null,
+            tokenBranch: process.env.TOKEN_BRANCH
         }
     },
     created () {
@@ -196,7 +197,7 @@ export default {
         this.holder = this.$route.params.holder
     },
     async mounted () {
-        let self = this
+        const self = this
 
         self.loading = true
 
@@ -206,7 +207,7 @@ export default {
             to: { name: 'tokens-slug', params: { slug: self.hash } }
         })
 
-        let { data } = await self.$axios.get('/api/tokens/' + self.hash)
+        const { data } = await self.$axios.get('/api/tokens/' + self.hash)
         self.token = data
         self.tokenName = data.name
         self.symbol = data.symbol
@@ -218,11 +219,16 @@ export default {
     },
     methods: {
         async getAccountFromApi () {
-            let self = this
+            const self = this
 
-            let { data } = await this.$axios.get('/api/accounts/' + self.hash)
+            const { data } = await this.$axios.get('/api/accounts/' + self.hash)
             self.address = data
             self.smartContract = data.contract
+        }
+    },
+    head () {
+        return {
+            title: 'Token RRC721 Holder Info'
         }
     }
 }
