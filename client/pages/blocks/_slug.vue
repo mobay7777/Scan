@@ -386,8 +386,8 @@ export default {
             ])
 
             this.block = responses[0].data
-            let moment = self.$moment(responses[0].data.timestamp)
-            this.timestamp_moment = `${moment.fromNow()} <small>(${moment.format('lll')} +UTC)</small>`
+            const moment = self.$moment(responses[0].data.timestamp)
+            this.timestamp_moment = `${moment.fromNow()} (${moment})`
 
             self.totalTxsCount = responses[1].data.totalTxes
 
